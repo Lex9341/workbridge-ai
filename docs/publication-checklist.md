@@ -1,0 +1,24 @@
+# Publication Checklist
+
+- [x] Backend build passes.
+- [x] Backend tests pass.
+- [x] Flutter analyze passes.
+- [x] Flutter tests pass.
+- [x] PostgreSQL container starts and becomes healthy.
+- [x] Prisma migration deploys successfully.
+- [x] Auth register/login/me works in backend tests.
+- [x] User data isolation is implemented in repository method signatures and covered by authenticated e2e flow.
+- [x] API providers have configuration status and warnings.
+- [x] `/settings` reports environment and publication readiness.
+- [x] Production defaults disable mock jobs and require auth.
+- [x] Flutter Settings shows Production Readiness.
+- [x] Flutter Discover Jobs shows "Demo jobs enabled" when mock jobs are active.
+- [x] Export writes to a visible documents directory and reports success/error.
+- [x] Application Builder warning is visible.
+- [x] No real secrets are committed; `.env.example` is provided.
+- [x] README is updated.
+- [x] Known limitations are listed.
+- [ ] Runtime repository fully uses PostgreSQL/Prisma instead of JSON for all reads/writes.
+- [ ] npm audit vulnerabilities are reviewed and resolved or accepted.
+- [ ] Provider settings slug editing is completed in Flutter.
+- [ ] JWT is persisted securely in Flutter.

@@ -1,0 +1,103 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id
+  email        String   @unique
+  passwordHash String
+  fullName     String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  profile      UserProfile?
+  credentials  Credential[]
+  projects     PortfolioProject[]
+  jobs         JobPosting[]
+  analyses     EligibilityAnalysis[]
+  applications ApplicationPackage[]
+  settings     Settings?
+}
+
+model UserProfile {
+  id                    String   @id
+  userId                String   @unique
+  data                  Json
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+  user                  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Credential {
+  id        String   @id
+  userId    String
+  data      Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model PortfolioProject {
+  id        String   @id
+  userId    String
+  data      Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model JobPosting {
+  id            String             @id
+  userId        String
+  data          Json
+  status        String
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+  user          User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  statusHistory JobStatusHistory[]
+}
+
+model EligibilityAnalysis {
+  id        String   @id
+  userId    String
+  jobId     String
+  data      Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model ApplicationPackage {
+  id        String   @id
+  userId    String
+  jobId     String
+  data      Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model JobStatusHistory {
+  id             String   @id
+  userId         String
+  jobId          String
+  previousStatus String
+  newStatus      String
+  note           String
+  changedAt      DateTime
+  job            JobPosting @relation(fields: [jobId], references: [id], onDelete: Cascade)
+}
+
+model Settings {
+  id        String   @id
+  userId    String   @unique
+  data      Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}

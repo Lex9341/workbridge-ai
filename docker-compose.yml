@@ -1,0 +1,37 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: workbridge_ai
+      POSTGRES_USER: workbridge
+      POSTGRES_PASSWORD: workbridge
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U workbridge -d workbridge_ai"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    image: node:22-alpine
+    working_dir: /app/backend
+    command: sh -c "npm install && npx prisma generate && npm run build && npm start"
+    env_file:
+      - .env.example
+    environment:
+      DATABASE_URL: postgresql://workbridge:workbridge@postgres:5432/workbridge_ai?schema=public
+      STORAGE_DRIVER: postgres
+      USE_MOCK_JOBS: "true"
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
